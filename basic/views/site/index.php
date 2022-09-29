@@ -22,25 +22,22 @@ use yii\widgets\DetailView;
 <div class="track-view">
     <table class="table">
         <tbody style="color: #fff;">
-            <?php foreach ($dataProvider->getModels() as $model) { ?>
 
-                <tr>
-                    <td class="text-center">
-                        <svg id="start<?= $model->id ?>" v-on:click="say('<?php print($model->filephoto) ?>'), seenHide(<?= $model->id ?>)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+                <tr v-for="track in tracks">
+                    <td class="text-center" >
+                        <svg v-bind:id="'start'+track.id" v-on:click="say(track.filephoto), seenHide(track.id)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
                             <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
                         </svg>
-                        <svg class="pause" id="pause<?= $model->id ?>" v-on:click="say('<?php print($model->filephoto) ?>'), HideSeen(<?= $model->id ?>)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16" style="display: none">
+                        <svg class="pause" v-bind:id="'pause'+track.id" v-on:click="say(track.filephoto), HideSeen(track.id)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16" style="display: none">
                             <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z" />
                         </svg>
                     </td>
-                    <td><a style="cursor: pointer;" v-on:click="search('<?php print($model->artist)  ?>')" v-bind:link="asd"><?= $model->artist ?></a></td>
-                    <td> <?= $model->name ?></td>
+                    <td><a style="cursor: pointer;" v-on:click="search(track.id)" v-bind:link="asd">{{track.artist}}</a></td>
+                    <td> {{track.name}}</td>
                     <td class="td-actions text-right">
-                        <?= $model->timeline ?>
+                        {{track.timeline}}
                     </td>
                 </tr>
-
-            <?php } ?>
         </tbody>
     </table>
     <audio autoplay style="position: absolute;left:0;bottom: 5px;" v-bind:src="'track/' + message + '.mp3'" class="container-fluid track" controls type="audio/mp3">
@@ -51,7 +48,16 @@ use yii\widgets\DetailView;
         el: "#search",
         data: {
 
-            search: ''
+            search: '',
+            tracks: [],
+        },
+        mounted: async function() {
+            const t = this
+            await fetch('http://localhost:8080/api/index', {
+                method: 'GET',
+            }).then(async response => {
+                t.tracks = await response.json()
+            })
         }
     })
 </script>

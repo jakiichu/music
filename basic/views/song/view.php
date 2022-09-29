@@ -18,10 +18,10 @@ use function PHPUnit\Framework\lessThan;
 <style>
 </style>
 <div class="track">
+    
     <h1 class="display" style="color:white; text-align:center">{{cartname}}</h1>
     <table class="table">
         <tbody style="color: #fff;">
-        
             <tr v-for="track in tracks" v-if="track.artist == cartname">
 
                 <td class="text-center">
@@ -53,7 +53,7 @@ use function PHPUnit\Framework\lessThan;
     var player2 = new Vue({
         el: ".track",
         data: {
-            cartname: '',
+            cartname: [],
             material: '',
             message: '',
             seen: true,
@@ -110,7 +110,8 @@ use function PHPUnit\Framework\lessThan;
         },
         updated: function() {
 
-            this.cartname = this.tracks[0].artist
+            this.cartname = this.tracks[<?php print($id)?> - 1].artist
+            console.log(this.cartname)
         }
     })
 </script>
