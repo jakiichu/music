@@ -51,7 +51,7 @@ use yii\widgets\DetailView;
             search: '',
             tracks: [],
         },
-        mounted: async function() {
+        beforeCreate: async function() {
             const t = this
             await fetch('http://localhost:8080/api/index', {
                 method: 'GET',
